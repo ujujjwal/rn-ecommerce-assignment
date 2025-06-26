@@ -1,13 +1,18 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Button, ScrollView } from 'react-native';
-import { useCart } from '../context/CartContext';
+import {View, Text, Image, StyleSheet, Button, ScrollView} from 'react-native';
+import {useCart} from '../context/CartContext';
 
-export default function ProductDetailsScreen({ route, navigation }) {
-  const { product } = route.params;
-  const { addToCart } = useCart();
+export default function ProductDetailsScreen({route, navigation}) {
+  const handleBuyNow = () => {
+    addToCart({...product, qty: 1});
+    navigation.navigate('Cart');
+  };
+
+  const {product} = route.params;
+  const {addToCart} = useCart();
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Image source={{ uri: product.image }} style={styles.image} />
+      <Image source={{uri: product.image}} style={styles.image} />
 
       <View style={styles.details}>
         <Text style={styles.name}>{product.name}</Text>
@@ -19,15 +24,14 @@ export default function ProductDetailsScreen({ route, navigation }) {
         </Text>
 
         <View style={styles.buttonContainer}>
-        <Button title="Add to Cart" onPress={() => addToCart(product)} />
+          <Button
+            title="Add to Cart"
+            onPress={() => [addToCart(product), navigation.navigate('Cart')]}
+          />
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button
-            title="Buy Now"
-            color="green"
-            onPress={() => navigation.navigate('Cart')}
-          />
+          <Button title="Buy Now" color="green" onPress={handleBuyNow} />
         </View>
       </View>
     </ScrollView>
@@ -35,7 +39,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, backgroundColor: '#fff' },
+  container: {padding: 16, backgroundColor: '#fff'},
   image: {
     width: '100%',
     height: 240,
@@ -43,9 +47,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   details: {},
-  name: { fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
-  price: { fontSize: 20, color: '#444', marginBottom: 8 },
-  tags: { color: '#888', marginBottom: 8 },
-  description: { fontSize: 14, lineHeight: 20, marginBottom: 16 },
-  buttonContainer: { marginBottom: 10 },
+  name: {fontSize: 24, fontWeight: 'bold', marginBottom: 8},
+  price: {fontSize: 20, color: '#444', marginBottom: 8},
+  tags: {color: '#888', marginBottom: 8},
+  description: {fontSize: 14, lineHeight: 20, marginBottom: 16},
+  buttonContainer: {marginBottom: 10},
 });
